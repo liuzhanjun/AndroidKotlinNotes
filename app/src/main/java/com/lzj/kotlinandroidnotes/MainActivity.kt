@@ -47,16 +47,16 @@ class MainActivity : AppCompatActivity() {
 
     fun getDatas(): MutableList<String> {
         return mutableListOf(
-
-            "xinlang",
-            "tengxun",
-            "baidu",
-            "xinlang",
-            "tengxun",
-            "baidu",
-            "xinlang",
-            "tengxun",
-            "baidu",
+            "xinlang0",
+            "xinlang1",
+            "tengxun2",
+            "baidu3",
+            "xinlang4",
+            "tengxun5",
+            "baidu6",
+            "xinlang7",
+            "tengxun8",
+            "baidu9",
             "xinlang",
             "tengxun",
             "tengxun",

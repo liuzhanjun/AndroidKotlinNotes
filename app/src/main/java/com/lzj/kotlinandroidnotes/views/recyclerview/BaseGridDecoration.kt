@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.absoluteValue
 
 class BaseGridDecoration : RecyclerView.ItemDecoration {
 
@@ -18,10 +19,14 @@ class BaseGridDecoration : RecyclerView.ItemDecoration {
     private val mLastBounds = Rect()
     private val spanCount: Int
     private val oration: Int
+    private var wInterval = 0
+    private var hInterval = 0
 
     constructor(context: Context, oration: Int, spanCount: Int) : super() {
         val typeArray = context.obtainStyledAttributes(attr)
         mDivider = typeArray.getDrawable(0)!!
+        wInterval = mDivider.intrinsicWidth
+        hInterval = mDivider.intrinsicHeight
         typeArray.recycle()
         mContext = context
         this.spanCount = spanCount
@@ -40,20 +45,94 @@ class BaseGridDecoration : RecyclerView.ItemDecoration {
     }
 
     private fun drawHorzotal(canvas: Canvas, parent: RecyclerView) {
+        canvas.save()
         val childCount = parent.childCount
-        //计算出最高的那个item从上到下边的差
-        val maxHeight = IntRange(0, childCount - 1).foldIndexed(0) { index, acc, i ->
-            val child = parent.getChildAt(i)
+        //计算出相邻两个item之间的距离
+        var maxHeight = 0
+        if (childCount >= 2) {
+            val child1 = parent.getChildAt(0)
+            parent.getDecoratedBoundsWithMargins(child1, mBounds)
+            val child2 = parent.getChildAt(1)
+            val mBound2 = Rect()
+            parent.getDecoratedBoundsWithMargins(child2, mBound2)
+            var len = mBound2.top - mBounds.top
+            maxHeight = len.absoluteValue
+        } else if (childCount == 1) {
+            val child = parent.getChildAt(0)
             parent.getDecoratedBoundsWithMargins(child, mBounds)
             var len = mBounds.top - mBounds.bottom
-            if (len < acc) {
-                len = acc
-            }
-            len
+            maxHeight = len.absoluteValue
         }
+        println("height=${maxHeight}")
         for (i in 0 until childCount) {
             //先画上边的线
+            val child = parent.getChildAt(i)
+            parent.getDecoratedBoundsWithMargins(child, mBounds)
+            drawhorHTop(i, canvas)
+            //画左边
+            drawhorHLeft(i, canvas, maxHeight)
+            //画下边的线
+            if ((i + 1) % spanCount == 0) {
+                drawhorHBottom(i, canvas, maxHeight)
+            }
+            if (childCount % spanCount > 0) {
+                drawhorHBottom(childCount - 1, canvas, maxHeight)
+            }
+            //画右边
+            //最后spanCount个画右边
+            if (i >= childCount - spanCount) {
+                drawhorHRight(i, canvas, maxHeight)
+            }
         }
+        canvas.restore()
+    }
+
+    private fun drawhorHRight(i: Int, canvas: Canvas, maxHeight: Int) {
+        var left = mBounds.right - wInterval
+        var top = mBounds.top
+        var right = mBounds.right
+        var bottom = top + maxHeight
+        mDivider.setBounds(left, top, right, bottom)
+        mDivider.draw(canvas)
+    }
+
+    private fun drawhorHBottom(i: Int, canvas: Canvas, maxHeight: Int) {
+        val left = mBounds.left
+        val top = mBounds.top + maxHeight - hInterval
+        val right = mBounds.right
+        val bottom = top + hInterval
+        mDivider.setBounds(left, top, right, bottom)
+        mDivider.draw(canvas)
+    }
+
+    private fun drawhorHLeft(i: Int, canvas: Canvas, maxHeight: Int) {
+        var left = mBounds.left - wInterval
+        var top = mBounds.top - hInterval
+        var right = left + wInterval
+        var bottom = top + maxHeight
+        if (i < spanCount) {
+            left = mBounds.left
+            right = left + wInterval
+        }
+        if (i % spanCount == 0) {
+            top = mBounds.top
+        }
+        mDivider.setBounds(left, top, right, bottom)
+        mDivider.draw(canvas)
+
+    }
+
+    private fun drawhorHTop(i: Int, canvas: Canvas) {
+        val left = mBounds.left
+        var top = mBounds.top - hInterval
+        val right = mBounds.right - wInterval
+        var bottom = top + hInterval
+        if (i % spanCount == 0) {
+            top = mBounds.top
+            bottom = top + hInterval
+        }
+        mDivider.setBounds(left, top, right, bottom)
+        mDivider.draw(canvas)
     }
 
     private fun drawVertical(canvas: Canvas, parent: RecyclerView) {
@@ -81,16 +160,16 @@ class BaseGridDecoration : RecyclerView.ItemDecoration {
             val top_left = mBounds.left
             val top_top = mBounds.top
             val top_right = mBounds.left + maxLen
-            val top_bottom = top_top + mDivider.intrinsicHeight
+            val top_bottom = top_top + hInterval
             if (i < spanCount) {
                 mDivider.setBounds(top_left, top_top, top_right, top_bottom)
                 mDivider.draw(canvas)
             }
             //画下边的线
             val bottom_left = mBounds.left
-            val bottom_top = mBounds.bottom - mDivider.intrinsicHeight
+            val bottom_top = mBounds.bottom - hInterval
             val bottom_right = bottom_left + maxLen
-            val bottom_bottom = bottom_top + mDivider.intrinsicHeight
+            val bottom_bottom = bottom_top + hInterval
             mDivider.setBounds(
                 bottom_left,
                 bottom_top,
@@ -102,7 +181,7 @@ class BaseGridDecoration : RecyclerView.ItemDecoration {
             //画最后一个和最后一列的右边
             if (i == childCount - 1 || (i + 1) % spanCount == 0) {
                 mDivider.setBounds(
-                    top_right - mDivider.intrinsicWidth,
+                    top_right - wInterval,
                     top_top,
                     top_right,
                     bottom_bottom
@@ -118,14 +197,14 @@ class BaseGridDecoration : RecyclerView.ItemDecoration {
         if (i % spanCount == 0) {
             val left_left = mBounds.left
             val left_top = mBounds.top
-            val left_right = left_left + mDivider.intrinsicWidth
+            val left_right = left_left + wInterval
             val left_bottom = mBounds.bottom
             mDivider.setBounds(left_left, left_top, left_right, left_bottom)
             mDivider.draw(canvas)
         } else {
             //画左边的线
-            val left_left = mBounds.left - mDivider.intrinsicWidth
-            val left_top = mBounds.top - mDivider.intrinsicHeight
+            val left_left = mBounds.left - wInterval
+            val left_top = mBounds.top - hInterval
             val left_right = mBounds.left
             val left_bottom = mBounds.bottom
             mDivider.setBounds(left_left, left_top, left_right, left_bottom)
@@ -207,16 +286,16 @@ class BaseGridDecoration : RecyclerView.ItemDecoration {
         var top_ = 0
         var bottom_ = 0
         if (left) {
-            left_ = mDivider.intrinsicWidth
+            left_ = wInterval
         }
         if (right) {
-            right_ = mDivider.intrinsicWidth
+            right_ = wInterval
         }
         if (top) {
-            top_ = mDivider.intrinsicHeight
+            top_ = hInterval
         }
         if (bottom) {
-            bottom_ = mDivider.intrinsicHeight
+            bottom_ = hInterval
         }
 
         outRect.set(
@@ -230,6 +309,8 @@ class BaseGridDecoration : RecyclerView.ItemDecoration {
     fun setmDivider(itmeDivider: Int) {
         if (mContext != null) {
             mDivider = ContextCompat.getDrawable(mContext!!, itmeDivider)!!
+            wInterval = mDivider.intrinsicWidth
+            hInterval = mDivider.intrinsicHeight
         }
     }
 }
