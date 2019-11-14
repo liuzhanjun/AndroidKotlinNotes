@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.fragment_show_view.*
 
 class ShowViewFragment : Fragment() {
 
-    private var typeName: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,12 +41,29 @@ class ShowViewFragment : Fragment() {
         }
         //绑定到布局
         binding.showView = showmodel;
+        println("========" + showmodel.isShowNumberView.value)
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        showPieView()
+        showTrapeView()
+        showRemote()
+    }
+
+    private fun showRemote() {
+        remoteMenu.setOnClickedMenuListener {
+            println("我点击了===" + it)
+        }
+    }
+
+    private fun showTrapeView() {
+
+    }
+
+    private fun showPieView() {
         pieView.textSize = 25f
         val datas = mutableListOf<PieView.PieData>()
         datas.add(PieView.PieData(name = "一号产品", value = 99f, percentage = 0.2f, color = Color.RED))
@@ -55,7 +71,6 @@ class ShowViewFragment : Fragment() {
         datas.add(PieView.PieData(name = "三号产品", value = 99f, percentage = 0.1f, color = Color.YELLOW))
         datas.add(PieView.PieData(name = "四号产品", value = 99f, percentage = 0.4f, color = Color.GREEN))
         pieView.addData(datas)
-
     }
 
     override fun onResume() {

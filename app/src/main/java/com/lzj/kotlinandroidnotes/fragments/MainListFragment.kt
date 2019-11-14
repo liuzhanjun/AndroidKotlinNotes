@@ -48,8 +48,8 @@ class MainListFragment : Fragment() {
 
     lateinit var showViewVm: ShowViewVm
     private fun providerViewModel() {
-        showViewVm =activity.run {
-             ViewModelProviders.of(activity!!).get(ShowViewVm::class.java)
+        showViewVm = activity.run {
+            ViewModelProviders.of(activity!!).get(ShowViewVm::class.java)
         }
 
     }
@@ -58,13 +58,16 @@ class MainListFragment : Fragment() {
         var datas = getDatas();
         val adapter = MyRecyclerAdapter(context!!, datas)
         adapter.onClicked = { view, postion ->
+            showViewVm.isShowNumberView.value = postion
             when (postion) {
                 0 -> {
-                    showViewVm.isShowPieView.value = true
+
                     this.findNavController().navigate(R.id.action_mainListFragment_to_showViewFragment)
                 }
                 1 -> {
-                    showViewVm.isShowPieView.value = false
+                    this.findNavController().navigate(R.id.action_mainListFragment_to_showViewFragment)
+                }
+                2 -> {
                     this.findNavController().navigate(R.id.action_mainListFragment_to_showViewFragment)
                 }
             }
@@ -80,7 +83,9 @@ class MainListFragment : Fragment() {
 
     fun getDatas(): MutableList<String> {
         return mutableListOf(
-            "PieView",
+            "饼状图",
+            "梯形图",
+            "遥控器图",
             "其他"
         )
     }

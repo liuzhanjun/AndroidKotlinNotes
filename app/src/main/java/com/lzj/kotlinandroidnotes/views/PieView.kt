@@ -4,13 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.view.ViewCompat.getMatrix
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import java.util.*
-import androidx.core.view.ViewCompat.getMatrix
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import com.lzj.kotlinandroidnotes.utils.DimenUtils
+import com.lzj.kotlinandroidnotes.views.utils.DimenUtils
 
 
 /**
@@ -40,7 +34,8 @@ class PieView : View {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attributeSet: AttributeSet?) : super(context, attributeSet) {
         initPaint()
-        DimenUtils(context).let {
+        DimenUtils.Instance.let {
+            it.getContext(context)
             interval = it.getDpMapPx(interval.toInt())
             textSize = it.getDpMapPx(textSize.toInt())
         }

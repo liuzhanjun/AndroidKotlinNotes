@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <import type="android.view.View"/>
         <import type="com.lzj.kotlinandroidnotes.converters.BindingConverters"/>
         <variable name="showView" type="com.lzj.kotlinandroidnotes.viewmodel.ShowViewVm"/>
     </data>
@@ -17,7 +18,27 @@
                 android:id="@+id/pieView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{BindingConverters.BooleanToVisiable(showView.isShowPieView)}"/>
+                android:visibility="@{showView.isShowNumberView==0?View.VISIBLE:View.GONE}"
+        />
 
+
+        <com.lzj.kotlinandroidnotes.views.TrapezoidalView
+                android:id="@+id/trapView"
+                android:layout_width="50dp"
+                android:layout_gravity="center"
+                app:color="@color/colorPrimaryDark"
+                android:visibility="@{showView.isShowNumberView==1?View.VISIBLE:View.GONE}"
+                android:layout_height="20dp"/>
+
+        <com.lzj.kotlinandroidnotes.views.RemoteControlMenu
+                android:id="@+id/remoteMenu"
+                android:background="@color/colorPrimaryDark"
+                android:layout_width="300dp"
+                android:layout_gravity="center"
+                app:interval="4dp"
+                app:arcHight="20dp"
+                app:centerRatio="0.2"
+                android:visibility="@{showView.isShowNumberView==2?View.VISIBLE:View.GONE}"
+                android:layout_height="250dp"/>
     </FrameLayout>
 </layout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TrapezoidalView">
+        <attr name="color" format="color"/>
+
+    </declare-styleable>
+
+    <declare-styleable name="RemoteControlMenu">
+        <attr name="backColor" format="color"/>
+        <!--决定边缘扇形的大小-->
+        <attr name="arcHight" format="dimension"/>
+        <attr name="interval" format="dimension"/>
+        <!--中间圆的比例0-0.5,决定中间椭圆的大小-->
+        <attr name="centerRatio" format="float"/>
+    </declare-styleable>
+</resources>
