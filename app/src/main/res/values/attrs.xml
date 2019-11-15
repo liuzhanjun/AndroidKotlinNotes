@@ -7,6 +7,8 @@
 
     <declare-styleable name="RemoteControlMenu">
         <attr name="backColor" format="color"/>
+        <attr name="clickedColor" format="color"/>
+        <attr name="menuBackground" format="reference"/>
         <!--决定边缘扇形的大小-->
         <attr name="arcHight" format="dimension"/>
         <attr name="interval" format="dimension"/>

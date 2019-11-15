@@ -32,13 +32,14 @@
 
         <com.lzj.kotlinandroidnotes.views.RemoteControlMenu
                 android:id="@+id/remoteMenu"
-                android:background="@color/colorPrimaryDark"
                 android:layout_width="300dp"
                 android:layout_gravity="center"
                 app:interval="4dp"
                 app:arcHight="20dp"
                 app:centerRatio="0.2"
+                app:menuBackground="@drawable/remote_background"
                 android:visibility="@{showView.isShowNumberView==2?View.VISIBLE:View.GONE}"
                 android:layout_height="250dp"/>
+
     </FrameLayout>
 </layout>

@@ -2,17 +2,12 @@ package com.lzj.kotlinandroidnotes.views
 
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.MotionEvent
-import androidx.core.graphics.contains
-import kotlin.math.absoluteValue
-import androidx.core.view.ViewCompat.getMatrix
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import androidx.core.graphics.minus
-import androidx.core.graphics.withMatrix
 import com.lzj.kotlinandroidnotes.R
 import com.lzj.kotlinandroidnotes.views.utils.*
-import java.util.*
+import android.graphics.BitmapShader
 
 
 class RemoteControlMenu : CustomView {
@@ -58,17 +53,26 @@ class RemoteControlMenu : CustomView {
 
     private var touchPoint: FloatArray
 
-    private var canvasMatrix: Matrix
+    //当前画布矩阵的翻转矩阵
+    private var invertMatrix: Matrix
+    //当前画布的矩阵
+    private var cavansMatrix: Matrix
 
     var backColor: Int = 0
     var clickedColor: Int = Color.YELLOW
-    private var index: Int = -1
+
 
     private var centerColor: Int = 0
     private var leftColor: Int = 0
     private var topColor: Int = 0
     private var rightColor: Int = 0
     private var bottomColor: Int = 0
+
+    private var menuBackground: Drawable? = null
+
+
+    private var index: Int = -1
+
 
     init {
         centerCirclerPath = Path()
@@ -82,13 +86,15 @@ class RemoteControlMenu : CustomView {
         topRegion = Region()
         rightRegion = Region()
         bottomRegion = Region()
-        canvasMatrix = Matrix()
-
+        invertMatrix = Matrix()
+        cavansMatrix = Matrix()
     }
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attributeSet: AttributeSet?) : super(context, attributeSet) {
         val type = context.obtainStyledAttributes(attributeSet, R.styleable.RemoteControlMenu)
+
+        menuBackground = type.getDrawable(R.styleable.RemoteControlMenu_menuBackground)
         backColor = type.getColor(R.styleable.RemoteControlMenu_backColor, Color.parseColor("#4D5266"))
         reinitColor()
         interval = type.getDimension(R.styleable.RemoteControlMenu_interval, 0f)
@@ -122,12 +128,11 @@ class RemoteControlMenu : CustomView {
         centerRegion.setPath(centerCirclerPath, clipRegion)
 
         //计算画布坐标移动后的矩阵
-        val tempMatrix = Matrix()
-        tempMatrix.preTranslate(mViewWidth / 2f, mViewHeight / 2f)
-        tempMatrix.preScale(1f, -1f)//旋转y轴
+        cavansMatrix.preTranslate(mViewWidth / 2f, mViewHeight / 2f)
+        cavansMatrix.preScale(1f, -1f)//旋转y轴
         //反转该矩阵，用来将点击的电换算成画布坐标系中的点
-        tempMatrix.invert(canvasMatrix)
-        println("画布矩阵" + canvasMatrix.toString())
+        cavansMatrix.invert(invertMatrix)
+        println("画布矩阵" + invertMatrix.toString())
 
         prepareRectF()
 
@@ -158,7 +163,7 @@ class RemoteControlMenu : CustomView {
                 touchPoint[0] = event.getX()
                 touchPoint[1] = event.getY()
                 //反矩阵
-                canvasMatrix.mapPoints(touchPoint)
+                invertMatrix.mapPoints(touchPoint)
                 //检测圆心点击
                 index = checkClicked(centerRegion, leftRegion, topRegion, rightRegion, bottomRegion, touchPoint)
 
@@ -301,6 +306,8 @@ class RemoteControlMenu : CustomView {
         rightRegion.setPath(rightArcPath, clipRegion)
     }
 
+
+
     private fun prepareLeftArc(canvas: Canvas) {
         pathAddArc(leftArcPath, 505f, 70f, canvas) {
             mDefaultPaint.setColor(leftColor)
@@ -309,9 +316,19 @@ class RemoteControlMenu : CustomView {
     }
 
     private fun drawCenterCircle(canvas: Canvas) {
+        val bitmap = BitmapUtils.drawableToBitmap(menuBackground!!, mViewWidth, mViewHeight)
+        val mShader = BitmapShader(
+            bitmap,
+            Shader.TileMode.REPEAT,
+            Shader.TileMode.REPEAT
+        )
+        //使用当前画布的矩阵，为了与画布矩阵同步
+        mShader.setLocalMatrix(cavansMatrix)
+        mDefaultPaint.setShader(mShader)
         mDefaultPaint.style = Paint.Style.FILL
-        mDefaultPaint.setColor(centerColor)
+//        mDefaultPaint.setColor(centerColor)
         canvas.drawPath(centerCirclerPath, mDefaultPaint)
+
     }
 
     private fun drawAxis(canvas: Canvas?) {
