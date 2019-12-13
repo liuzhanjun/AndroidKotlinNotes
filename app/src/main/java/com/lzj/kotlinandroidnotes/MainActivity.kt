@@ -4,8 +4,11 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.LinearLayout
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.recyclerview.widget.*
 import com.example.android.navigationadvancedsample.setupWithNavController
@@ -17,7 +20,7 @@ import com.lzj.kotlinandroidnotes.views.recyclerview.setmDividerByXml
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
+    var currentNavController:LiveData<NavController>? =null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -54,8 +57,15 @@ class MainActivity : AppCompatActivity() {
         navControllers.observe(this, Observer { navController ->
             setupActionBarWithNavController(navController)
         })
+        bottom_nav.setOnNavigationItemReselectedListener {
+            println(it.itemId)
+            print("====================")
+        }
+        currentNavController=navControllers
 
     }
 
-
+    override fun onSupportNavigateUp(): Boolean {
+        return currentNavController?.value?.navigateUp() ?: false
+    }
 }

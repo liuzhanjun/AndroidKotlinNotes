@@ -96,8 +96,6 @@ fun BottomNavigationView.setupWithNavController(
         if (fragmentManager.isStateSaved) {
             false
         } else {
-            println("graphIdToTagMap=${graphIdToTagMap}")
-            println(" graphIdToTagMap itemid===${item.itemId}")
             var newlySelectedItemTag = graphIdToTagMap[item.itemId]
             if (selectedItemTag != newlySelectedItemTag) {
                 // Pop everything above the first fragment (the "fixed start destination")
@@ -193,7 +191,6 @@ private fun BottomNavigationView.setupItemReselected(
 ) {
     setOnNavigationItemReselectedListener { item ->
         val newlySelectedItemTag = graphIdToTagMap[item.itemId]
-        println("setOnNavigationItemReselectedListener=${newlySelectedItemTag}")
         val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedItemTag)
                 as NavHostFragment
         val navController = selectedFragment.navController
