@@ -70,6 +70,9 @@ class MainListFragment : Fragment() {
                 2 -> {
                     this.findNavController().navigate(R.id.action_mainListFragment_to_showViewFragment)
                 }
+                3 -> {
+                    this.findNavController().navigate(R.id.action_mainListFragment_to_roomFragment)
+                }
             }
         }
 
@@ -86,6 +89,7 @@ class MainListFragment : Fragment() {
             "饼状图",
             "梯形图",
             "遥控器图",
+            "room",
             "其他"
         )
     }

@@ -13,6 +13,7 @@
                 app:destination="@id/showViewFragment">
 
         </action>
+        <action android:id="@+id/action_mainListFragment_to_roomFragment" app:destination="@id/roomFragment"/>
     </fragment>
     <fragment android:id="@+id/showViewFragment"
               android:name="com.lzj.kotlinandroidnotes.fragments.ShowViewFragment"
@@ -23,5 +24,9 @@
                 app:destination="@id/mainListFragment">
 
         </action>
+    </fragment>
+    <fragment android:id="@+id/roomFragment" android:name="com.lzj.kotlinandroidnotes.fragments.RoomFragment"
+              android:label="fragment_room" tools:layout="@layout/fragment_room">
+        <action android:id="@+id/action_roomFragment_to_mainListFragment" app:destination="@id/mainListFragment"/>
     </fragment>
 </navigation>
