@@ -5,5 +5,5 @@
             app:startDestination="@id/toolsFragment">
 
     <fragment android:id="@+id/toolsFragment" android:name="com.lzj.kotlinandroidnotes.fragments.ToolsFragment"
-              android:label="fragment_tools" tools:layout="@layout/fragment_tools"/>
+              android:label="工具" tools:layout="@layout/fragment_tools"/>
 </navigation>

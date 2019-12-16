@@ -8,4 +8,10 @@
     <string name="nav_warning">JetPack</string>
     <string name="nav_counts">Tools</string>
     <string name="nav_personal">net</string>
+    <string name="tv_shuangxiang">双向数据绑定：数据绑定的前提是同时具有getXX,SetXX方法</string>
+    <string name="title">数据绑定：\n数据绑定的前提是控件的xml的attr对应的是setXXX方法\n
+                    以TextView为例\n
+        ref android.R.styleable#TextView_text 对应setText
+
+    </string>
 </resources>

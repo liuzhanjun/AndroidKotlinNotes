@@ -5,5 +5,5 @@
             app:startDestination="@id/netFragment">
 
     <fragment android:id="@+id/netFragment" android:name="com.lzj.kotlinandroidnotes.fragments.NetFragment"
-              android:label="fragment_net" tools:layout="@layout/fragment_net"/>
+              android:label="网络相关" tools:layout="@layout/fragment_net"/>
 </navigation>

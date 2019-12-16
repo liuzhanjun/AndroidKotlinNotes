@@ -5,5 +5,21 @@
             app:startDestination="@id/jetPackFragment">
 
     <fragment android:id="@+id/jetPackFragment" android:name="com.lzj.kotlinandroidnotes.fragments.JetPackFragment"
-              android:label="JetPack" tools:layout="@layout/fragment_jet_pack"/>
+              android:label="JetPack" tools:layout="@layout/fragment_jet_pack">
+        <action android:id="@+id/action_jetPackFragment_to_dataBindingFragment"
+                app:destination="@id/dataBindingFragment"/>
+    </fragment>
+    <fragment android:id="@+id/dataBindingFragment"
+              android:name="com.lzj.kotlinandroidnotes.fragments.jetpack.DataBindingFragment"
+              android:label="databinding" tools:layout="@layout/fragment_data_binding">
+        <action android:id="@+id/action_dataBindingFragment_to_jetPackFragment" app:destination="@id/jetPackFragment"/>
+        <action android:id="@+id/action_dataBindingFragment_to_dataBSimpleFragment"
+                app:destination="@id/dataBSimpleFragment"/>
+    </fragment>
+    <fragment android:id="@+id/dataBSimpleFragment"
+              android:name="com.lzj.kotlinandroidnotes.fragments.jetpack.DataBSimpleFragment"
+              android:label="简单使用databinding" tools:layout="@layout/fragment_data_bsimple">
+        <action android:id="@+id/action_dataBSimpleFragment_to_dataBindingFragment"
+                app:destination="@id/dataBindingFragment"/>
+    </fragment>
 </navigation>

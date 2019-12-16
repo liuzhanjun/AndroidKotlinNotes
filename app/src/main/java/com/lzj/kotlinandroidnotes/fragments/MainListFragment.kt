@@ -58,6 +58,7 @@ class MainListFragment : Fragment() {
         var datas = getDatas();
         val adapter = MyRecyclerAdapter(context!!, datas)
         adapter.onClicked = { view, postion ->
+            //fragment间共享数据
             showViewVm.isShowNumberView.value = postion
             when (postion) {
                 0 -> {
